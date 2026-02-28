@@ -1,0 +1,26 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'api-server'
+    static_configs:
+      - targets: ['10.30.0.2:9100']  # TODO: update with actual API server IP
+        labels:
+          server: 'api'
+
+  - job_name: 'dev-server'
+    static_configs:
+      - targets: ['10.10.0.2:9100']  # TODO: update with actual Dev server IP
+        labels:
+          server: 'dev'
+
+  - job_name: 'prod-server'
+    static_configs:
+      - targets: ['10.20.0.2:9100']  # TODO: update with actual Prod server IP
+        labels:
+          server: 'prod'
