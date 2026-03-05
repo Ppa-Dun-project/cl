@@ -5,4 +5,16 @@ services:
       - "80:80"
     volumes:
       - /app/api/frontend:/usr/share/nginx/html/api:ro
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  api:
+    build:
+      context: /app/api
+      dockerfile: /app/cl/api/fastapi/Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - /app/api/api/.env
     restart: unless-stopped
