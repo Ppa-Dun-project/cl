@@ -1,10 +1,13 @@
 services:
-  fe:
+  nginx:
     build: ./nginx
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - /app/api/frontend:/usr/share/nginx/html/api:ro
+      - certbot-webroot:/var/www/certbot:ro
+      - certbot-certs:/etc/letsencrypt:ro
     depends_on:
       - api
     restart: unless-stopped
@@ -18,3 +21,15 @@ services:
     env_file:
       - /app/api/api/.env
     restart: unless-stopped
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - certbot-webroot:/var/www/certbot
+      - certbot-certs:/etc/letsencrypt
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done'"
+    restart: unless-stopped
+
+volumes:
+  certbot-webroot:
+  certbot-certs:
