@@ -23,7 +23,7 @@ services:
     restart: unless-stopped
 
   backend:
-    image: us-east1-docker.pkg.dev/v1-mvp/api/backend:latest
+    image: us-east1-docker.pkg.dev/v1-mvp/be-api/backend:latest
     ports:
       - "8001:8000"
     env_file:
