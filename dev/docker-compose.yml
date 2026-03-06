@@ -10,7 +10,9 @@ services:
     restart: unless-stopped
 
   be:
-    build: /app/be
+    image: us-east1-docker.pkg.dev/v1-mvp/be-dev/be:latest
     ports:
       - "8080:8080"
+    env_file:
+      - /app/be/.env
     restart: unless-stopped
