@@ -22,6 +22,16 @@ services:
       - db
     restart: unless-stopped
 
+  backend:
+    image: us-east1-docker.pkg.dev/v1-mvp/api/backend:latest
+    ports:
+      - "8001:8000"
+    env_file:
+      - /app/api/.env
+    depends_on:
+      - db
+    restart: unless-stopped
+
   db:
     image: mysql:8.0
     ports:
