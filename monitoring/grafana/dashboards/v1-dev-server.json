@@ -1,203 +1,200 @@
 {
-  "dashboard": {
-    "title": "V1 Dev Server",
-    "tags": ["dev", "v1"],
-    "timezone": "browser",
-    "refresh": "30s",
-    "time": {
-      "from": "now-1h",
-      "to": "now"
-    },
-    "panels": [
-      {
-        "title": "CPU Usage (%)",
-        "type": "timeseries",
-        "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
-        "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-        "fieldConfig": {
-          "defaults": {
-            "unit": "percent",
-            "min": 0,
-            "max": 100,
-            "thresholds": {
-              "steps": [
-                { "color": "green", "value": null },
-                { "color": "yellow", "value": 70 },
-                { "color": "red", "value": 90 }
-              ]
-            }
-          }
-        },
-        "targets": [
-          {
-            "expr": "100 - (avg(rate(node_cpu_seconds_total{server=\"dev\", mode=\"idle\"}[5m])) * 100)",
-            "legendFormat": "CPU Usage"
-          }
-        ]
-      },
-      {
-        "title": "Memory Usage (%)",
-        "type": "timeseries",
-        "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
-        "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-        "fieldConfig": {
-          "defaults": {
-            "unit": "percent",
-            "min": 0,
-            "max": 100,
-            "thresholds": {
-              "steps": [
-                { "color": "green", "value": null },
-                { "color": "yellow", "value": 70 },
-                { "color": "red", "value": 90 }
-              ]
-            }
-          }
-        },
-        "targets": [
-          {
-            "expr": "(1 - node_memory_MemAvailable_bytes{server=\"dev\"} / node_memory_MemTotal_bytes{server=\"dev\"}) * 100",
-            "legendFormat": "Memory Usage"
-          }
-        ]
-      },
-      {
-        "title": "Disk Usage (%)",
-        "type": "gauge",
-        "gridPos": { "h": 8, "w": 6, "x": 0, "y": 8 },
-        "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-        "fieldConfig": {
-          "defaults": {
-            "unit": "percent",
-            "min": 0,
-            "max": 100,
-            "thresholds": {
-              "steps": [
-                { "color": "green", "value": null },
-                { "color": "yellow", "value": 70 },
-                { "color": "red", "value": 85 }
-              ]
-            }
-          }
-        },
-        "targets": [
-          {
-            "expr": "(1 - node_filesystem_avail_bytes{server=\"dev\", mountpoint=\"/\"} / node_filesystem_size_bytes{server=\"dev\", mountpoint=\"/\"}) * 100",
-            "legendFormat": "Disk Usage"
-          }
-        ]
-      },
-      {
-        "title": "Network Traffic",
-        "type": "timeseries",
-        "gridPos": { "h": 8, "w": 12, "x": 6, "y": 8 },
-        "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-        "fieldConfig": {
-          "defaults": {
-            "unit": "Bps"
-          },
-          "overrides": [
-            {
-              "matcher": { "id": "byName", "options": "Inbound" },
-              "properties": [{ "id": "color", "value": { "fixedColor": "green", "mode": "fixed" } }]
-            },
-            {
-              "matcher": { "id": "byName", "options": "Outbound" },
-              "properties": [{ "id": "color", "value": { "fixedColor": "yellow", "mode": "fixed" } }]
-            }
-          ]
-        },
-        "targets": [
-          {
-            "expr": "rate(node_network_receive_bytes_total{server=\"dev\", device!=\"lo\"}[5m])",
-            "legendFormat": "Inbound"
-          },
-          {
-            "expr": "rate(node_network_transmit_bytes_total{server=\"dev\", device!=\"lo\"}[5m])",
-            "legendFormat": "Outbound"
-          }
-        ]
-      },
-      {
-        "title": "System Load (1m / 5m / 15m)",
-        "type": "timeseries",
-        "gridPos": { "h": 8, "w": 6, "x": 18, "y": 8 },
-        "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-        "targets": [
-          {
-            "expr": "node_load1{server=\"dev\"}",
-            "legendFormat": "1m"
-          },
-          {
-            "expr": "node_load5{server=\"dev\"}",
-            "legendFormat": "5m"
-          },
-          {
-            "expr": "node_load15{server=\"dev\"}",
-            "legendFormat": "15m"
-          }
-        ]
-      },
-      {
-        "title": "Container Logs",
-        "type": "logs",
-        "gridPos": { "h": 10, "w": 24, "x": 0, "y": 16 },
-        "datasource": { "type": "loki" },
-        "targets": [
-          {
-            "expr": "{job=\"docker\"}",
-            "refId": "A"
-          }
-        ],
-        "options": {
-          "showTime": true,
-          "sortOrder": "Descending",
-          "enableLogDetails": true,
-          "wrapLogMessage": true
-        }
-      },
-      {
-        "title": "Error Logs",
-        "type": "logs",
-        "gridPos": { "h": 10, "w": 24, "x": 0, "y": 26 },
-        "datasource": { "type": "loki" },
-        "targets": [
-          {
-            "expr": "{job=\"docker\"} |~ \"(?i)(error|exception|fatal|traceback)\"",
-            "refId": "A"
-          }
-        ],
-        "options": {
-          "showTime": true,
-          "sortOrder": "Descending",
-          "enableLogDetails": true,
-          "wrapLogMessage": true
-        }
-      },
-      {
-        "title": "Error Count (5m)",
-        "type": "stat",
-        "gridPos": { "h": 4, "w": 6, "x": 0, "y": 36 },
-        "datasource": { "type": "loki" },
-        "fieldConfig": {
-          "defaults": {
-            "thresholds": {
-              "steps": [
-                { "color": "green", "value": null },
-                { "color": "yellow", "value": 5 },
-                { "color": "red", "value": 20 }
-              ]
-            }
-          }
-        },
-        "targets": [
-          {
-            "expr": "count_over_time({job=\"docker\"} |~ \"(?i)(error|exception|fatal)\" [5m])",
-            "refId": "A"
-          }
-        ]
-      }
-    ]
+  "title": "V1 Dev Server",
+  "tags": ["dev", "v1"],
+  "timezone": "browser",
+  "refresh": "30s",
+  "time": {
+    "from": "now-1h",
+    "to": "now"
   },
-  "overwrite": true
+  "panels": [
+    {
+      "title": "CPU Usage (%)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 70 },
+              { "color": "red", "value": 90 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "100 - (avg(rate(node_cpu_seconds_total{server=\"dev\", mode=\"idle\"}[5m])) * 100)",
+          "legendFormat": "CPU Usage"
+        }
+      ]
+    },
+    {
+      "title": "Memory Usage (%)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "datasource": { "type": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 70 },
+              { "color": "red", "value": 90 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "(1 - node_memory_MemAvailable_bytes{server=\"dev\"} / node_memory_MemTotal_bytes{server=\"dev\"}) * 100",
+          "legendFormat": "Memory Usage"
+        }
+      ]
+    },
+    {
+      "title": "Disk Usage (%)",
+      "type": "gauge",
+      "gridPos": { "h": 8, "w": 6, "x": 0, "y": 8 },
+      "datasource": { "type": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "min": 0,
+          "max": 100,
+          "thresholds": {
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 70 },
+              { "color": "red", "value": 85 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "(1 - node_filesystem_avail_bytes{server=\"dev\", mountpoint=\"/\"} / node_filesystem_size_bytes{server=\"dev\", mountpoint=\"/\"}) * 100",
+          "legendFormat": "Disk Usage"
+        }
+      ]
+    },
+    {
+      "title": "Network Traffic",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 6, "y": 8 },
+      "datasource": { "type": "prometheus" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps"
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Inbound" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "green", "mode": "fixed" } }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Outbound" },
+            "properties": [{ "id": "color", "value": { "fixedColor": "yellow", "mode": "fixed" } }]
+          }
+        ]
+      },
+      "targets": [
+        {
+          "expr": "rate(node_network_receive_bytes_total{server=\"dev\", device!=\"lo\"}[5m])",
+          "legendFormat": "Inbound"
+        },
+        {
+          "expr": "rate(node_network_transmit_bytes_total{server=\"dev\", device!=\"lo\"}[5m])",
+          "legendFormat": "Outbound"
+        }
+      ]
+    },
+    {
+      "title": "System Load (1m / 5m / 15m)",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 6, "x": 18, "y": 8 },
+      "datasource": { "type": "prometheus" },
+      "targets": [
+        {
+          "expr": "node_load1{server=\"dev\"}",
+          "legendFormat": "1m"
+        },
+        {
+          "expr": "node_load5{server=\"dev\"}",
+          "legendFormat": "5m"
+        },
+        {
+          "expr": "node_load15{server=\"dev\"}",
+          "legendFormat": "15m"
+        }
+      ]
+    },
+    {
+      "title": "Container Logs",
+      "type": "logs",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 16 },
+      "datasource": { "type": "loki" },
+      "targets": [
+        {
+          "expr": "{job=\"docker\"}",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "showTime": true,
+        "sortOrder": "Descending",
+        "enableLogDetails": true,
+        "wrapLogMessage": true
+      }
+    },
+    {
+      "title": "Error Logs",
+      "type": "logs",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 26 },
+      "datasource": { "type": "loki" },
+      "targets": [
+        {
+          "expr": "{job=\"docker\"} |~ \"(?i)(error|exception|fatal|traceback)\"",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "showTime": true,
+        "sortOrder": "Descending",
+        "enableLogDetails": true,
+        "wrapLogMessage": true
+      }
+    },
+    {
+      "title": "Error Count (5m)",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 36 },
+      "datasource": { "type": "loki" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 5 },
+              { "color": "red", "value": 20 }
+            ]
+          }
+        }
+      },
+      "targets": [
+        {
+          "expr": "count_over_time({job=\"docker\"} |~ \"(?i)(error|exception|fatal)\" [5m])",
+          "refId": "A"
+        }
+      ]
+    }
+  ]
 }
