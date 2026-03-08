@@ -138,13 +138,13 @@
       ]
     },
     {
-      "title": "Container Logs",
+      "title": "Frontend Logs",
       "type": "logs",
       "gridPos": { "h": 10, "w": 24, "x": 0, "y": 16 },
       "datasource": { "type": "loki" },
       "targets": [
         {
-          "expr": "{job=\"docker\"}",
+          "expr": "{container=~\".*fe.*\"}",
           "refId": "A"
         }
       ],
@@ -156,9 +156,27 @@
       }
     },
     {
-      "title": "Error Logs",
+      "title": "Backend Logs",
       "type": "logs",
       "gridPos": { "h": 10, "w": 24, "x": 0, "y": 26 },
+      "datasource": { "type": "loki" },
+      "targets": [
+        {
+          "expr": "{container=~\".*be.*\"}",
+          "refId": "A"
+        }
+      ],
+      "options": {
+        "showTime": true,
+        "sortOrder": "Descending",
+        "enableLogDetails": true,
+        "wrapLogMessage": true
+      }
+    },
+    {
+      "title": "Error Logs (All)",
+      "type": "logs",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 36 },
       "datasource": { "type": "loki" },
       "targets": [
         {
@@ -176,7 +194,7 @@
     {
       "title": "Error Count (5m)",
       "type": "stat",
-      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 36 },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 46 },
       "datasource": { "type": "loki" },
       "fieldConfig": {
         "defaults": {
