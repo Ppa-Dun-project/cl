@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api
+  name: api-be
 spec:
-  replicas: {{ .Values.api.replicas }}
+  replicas: {{ .Values.apiBe.replicas }}
   selector:
     matchLabels:
-      app: api
+      app: api-be
   template:
     metadata:
       labels:
-        app: api
+        app: api-be
     spec:
       containers:
-        - name: api
-          image: "{{ .Values.api.image }}:{{ .Values.api.tag }}"
+        - name: api-be
+          image: "{{ .Values.apiBe.image }}:{{ .Values.apiBe.tag }}"
           ports:
-            - containerPort: {{ .Values.api.port }}
+            - containerPort: {{ .Values.apiBe.port }}
           envFrom:
             - secretRef:
                 name: app-secret

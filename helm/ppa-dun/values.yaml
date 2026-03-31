@@ -1,4 +1,4 @@
-api:
+apiApi:
   image: us-east1-docker.pkg.dev/v1-mvp/api/api
   tag: latest
   replicas: 1
@@ -8,11 +8,17 @@ api:
   externalApiKey: ""
   externalApiTimeout: "5.0"
 
-backend:
+apiBe:
   image: us-east1-docker.pkg.dev/v1-mvp/be-api/backend
   tag: latest
   replicas: 1
   port: 8000
+
+ppaDunBe:
+  image: us-east1-docker.pkg.dev/v1-mvp/be-dev/be
+  tag: latest
+  replicas: 1
+  port: 8080
 
 env: dev
 
