@@ -19,4 +19,4 @@ spec:
             - containerPort: {{ .Values.ppaDunBe.port }}
           envFrom:
             - secretRef:
-                name: app-secret
+                name: ppa-dun-secret

@@ -19,4 +19,4 @@ spec:
             - containerPort: {{ .Values.apiApi.port }}
           envFrom:
             - secretRef:
-                name: app-secret
+                name: api-secret
