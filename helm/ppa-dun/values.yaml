@@ -1,12 +1,12 @@
 ppaDunFe:
   image: us-east1-docker.pkg.dev/v1-mvp/fe-prod/fe
-  tag: latest
+  tag: "801d0222e1b5a4ffade24af69f75100c2f5e95cd"
   replicas: 1
   port: 80
 
 ppaDunBe:
   image: us-east1-docker.pkg.dev/v1-mvp/be-dev/be
-  tag: latest
+  tag: "801d0222e1b5a4ffade24af69f75100c2f5e95cd"
   replicas: 1
   port: 8080
 
