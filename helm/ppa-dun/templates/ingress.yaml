@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: ppa-dun-ingress
   annotations:
-    kubernetes.io/ingress.global-static-ip-name: "k8s-load-balancer"
+    kubernetes.io/ingress.global-static-ip-name: "ppa-dun-lb"
 spec:
   rules:
     - host: {{ .Values.ingress.host }}
