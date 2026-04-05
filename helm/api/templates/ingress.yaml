@@ -1,7 +1,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ppa-dun-ingress
+  name: api-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "k8s-load-balancer"
 spec:
   rules:
     - host: {{ .Values.ingress.host }}
