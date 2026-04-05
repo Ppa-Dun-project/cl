@@ -1,3 +1,9 @@
+ppaDunFe:
+  image: us-east1-docker.pkg.dev/v2-ppa-dun/fe/ppa-dun-fe
+  tag: latest
+  replicas: 1
+  port: 80
+
 ppaDunBe:
   image: us-east1-docker.pkg.dev/v1-mvp/be-dev/be
   tag: latest

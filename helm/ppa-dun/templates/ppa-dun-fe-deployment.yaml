@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ppa-dun-fe
+spec:
+  replicas: {{ .Values.ppaDunFe.replicas }}
+  selector:
+    matchLabels:
+      app: ppa-dun-fe
+  template:
+    metadata:
+      labels:
+        app: ppa-dun-fe
+    spec:
+      containers:
+        - name: ppa-dun-fe
+          image: "{{ .Values.ppaDunFe.image }}:{{ .Values.ppaDunFe.tag }}"
+          ports:
+            - containerPort: {{ .Values.ppaDunFe.port }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.ppaDunFe.port }}

@@ -16,3 +16,10 @@ spec:
                 name: ppa-dun-be
                 port:
                   number: 80
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ppa-dun-fe
+                port:
+                  number: 80
