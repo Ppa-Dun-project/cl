@@ -17,6 +17,10 @@ spec:
           image: "{{ .Values.apiBe.image }}:{{ .Values.apiBe.tag }}"
           ports:
             - containerPort: {{ .Values.apiBe.port }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.apiBe.port }}
           envFrom:
             - secretRef:
                 name: api-secret
