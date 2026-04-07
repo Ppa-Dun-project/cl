@@ -18,18 +18,39 @@ resource "google_project_iam_member" "token_creator" {
   member  = "serviceAccount:${google_service_account.app_secrets.email}"
 }
 
-# Workload Identity binding for api-secrets-ksa
-resource "google_service_account_iam_member" "workload_identity_api" {
-  service_account_id = google_service_account.app_secrets.name
-  role               = "roles/iam.workloadIdentityUser"
-  member             = "serviceAccount:${var.project_id}.svc.id.goog[app/api-secrets-ksa]"
-  depends_on         = [google_container_cluster.primary]
+# Grant Artifact Registry reader on v1-mvp (images are stored there)
+resource "google_project_iam_member" "ar_reader_sa" {
+  project = "v1-mvp"
+  role    = "roles/artifactregistry.reader"
+  member  = "serviceAccount:${google_service_account.app_secrets.email}"
 }
 
-# Workload Identity binding for ppa-dun-secrets-ksa
+# Grant v2 default compute SA access to v1 Artifact Registry
+resource "google_project_iam_member" "ar_reader_compute" {
+  project = "v1-mvp"
+  role    = "roles/artifactregistry.reader"
+  member  = "serviceAccount:${data.google_project.v2.number}-compute@developer.gserviceaccount.com"
+}
+
+# Get v2 project number
+data "google_project" "v2" {
+  project_id = var.project_id
+}
+
+# ── Workload Identity bindings ──────────────────────────────────────
+
+# ppa-dun-secrets-ksa (app namespace)
 resource "google_service_account_iam_member" "workload_identity_ppa_dun" {
   service_account_id = google_service_account.app_secrets.name
   role               = "roles/iam.workloadIdentityUser"
   member             = "serviceAccount:${var.project_id}.svc.id.goog[app/ppa-dun-secrets-ksa]"
+  depends_on         = [google_container_cluster.primary]
+}
+
+# api-secrets-ksa (app namespace) - kept for compatibility
+resource "google_service_account_iam_member" "workload_identity_api" {
+  service_account_id = google_service_account.app_secrets.name
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "serviceAccount:${var.project_id}.svc.id.goog[app/api-secrets-ksa]"
   depends_on         = [google_container_cluster.primary]
 }
