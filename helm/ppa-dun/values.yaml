@@ -6,7 +6,7 @@ ppaDunFe:
 
 ppaDunBe:
   image: us-east1-docker.pkg.dev/v1-mvp/be-prod/be
-  tag: "3e39c2169b70b3ad53298b39c80f81b60f578bb0"
+  tag: "fabd3b520a3882c76c0273707e9eebe6ed7ef7f5"
   replicas: 1
   port: 8080
 
