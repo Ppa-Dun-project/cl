@@ -1,6 +1,6 @@
 ppaDunFe:
   image: us-east1-docker.pkg.dev/v1-mvp/fe-prod/fe
-  tag: "9d64a5261401ef482cebecd1c906ba8bdb91f043"
+  tag: "a2d2dfc63f0ea8ab2e74e8696e67b625984efaf1"
   replicas: 1
   port: 80
 
