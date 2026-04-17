@@ -3,8 +3,11 @@ services:
     build: ./nginx
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - /app/fe/dist:/usr/share/nginx/html/fe:ro
+      - certbot-webroot:/var/www/certbot:ro
+      - certbot-certs:/etc/letsencrypt:ro
     depends_on:
       - be
     restart: unless-stopped
@@ -13,6 +16,14 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - certbot-webroot:/var/www/certbot
+      - certbot-certs:/etc/letsencrypt
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done'"
+    restart: unless-stopped
 
   be:
     image: us-east1-docker.pkg.dev/v1-mvp/be-dev/be:latest
@@ -71,3 +82,5 @@ services:
 
 volumes:
   mysql-data:
+  certbot-webroot:
+  certbot-certs:
