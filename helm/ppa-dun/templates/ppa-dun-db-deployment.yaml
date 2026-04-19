@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ppa-dun-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ppa-dun-db
+  template:
+    metadata:
+      labels:
+        app: ppa-dun-db
+    spec:
+      volumes:
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: ppa-dun-db-pvc
+      containers:
+        - name: mysql
+          image: mysql:8.0
+          ports:
+            - containerPort: 3306
+          envFrom:
+            - secretRef:
+                name: ppa-dun-secret
+          volumeMounts:
+            - name: mysql-data
+              mountPath: /var/lib/mysql
