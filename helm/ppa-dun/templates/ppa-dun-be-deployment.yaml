@@ -17,6 +17,13 @@ spec:
           image: "{{ .Values.ppaDunBe.image }}:{{ .Values.ppaDunBe.tag }}"
           ports:
             - containerPort: {{ .Values.ppaDunBe.port }}
+          env:
+            - name: GCP_PROJECT_ID
+              value: {{ .Values.ppaDunBe.vertex.projectId | quote }}
+            - name: GCP_LOCATION
+              value: {{ .Values.ppaDunBe.vertex.location | quote }}
+            - name: VERTEX_AI_MODEL
+              value: {{ .Values.ppaDunBe.vertex.model | quote }}
           envFrom:
             - secretRef:
                 name: ppa-dun-secret

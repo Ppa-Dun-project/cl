@@ -9,6 +9,12 @@ ppaDunBe:
   tag: "2acb2e7197b55b27a1042bf82d218ccb0a7cb5f5"
   replicas: 1
   port: 8080
+  # Vertex AI (Gemini) — used by /api/compare/ai-recommend.
+  # These are non-secret config values; auth is handled by Workload Identity.
+  vertex:
+    projectId: v1-mvp
+    location: us-central1
+    model: gemini-2.5-flash
 
 env: dev
 
