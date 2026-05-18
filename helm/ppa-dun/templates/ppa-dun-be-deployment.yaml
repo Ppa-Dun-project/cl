@@ -12,6 +12,10 @@ spec:
       labels:
         app: ppa-dun-be
     spec:
+      # Bind pod to the ServiceAccount that has Workload Identity → app-secrets-sa@v2-ppa-dun.iam.
+      # This is needed for the Vertex AI client (be/pages/ai.py) to fetch GCP credentials
+      # via the metadata server; without it the pod runs as `default` KSA and gets no token.
+      serviceAccountName: ppa-dun-secrets-ksa
       containers:
         - name: ppa-dun-be
           image: "{{ .Values.ppaDunBe.image }}:{{ .Values.ppaDunBe.tag }}"
